@@ -64,9 +64,9 @@ async function verifyToken(authHeader: string): Promise<JwtPayload> {
   const token = getToken(authHeader)
 
   // @ts-ignore
-  const jwt: Jwt = decode(token, { complete: true }) as Jwt
+  const jwtHeader: Jwt = decode(token, { complete: true }) as Jwt
 
-  const kid = jwt.header?.kid;
+  const kid = jwtHeader.header?.kid;
 
   if (!kid) {
     throw new Error('Invalid token header')
@@ -95,8 +95,8 @@ async function verifyToken(authHeader: string): Promise<JwtPayload> {
   return new Promise<JwtPayload>((resolve, reject) => {
     jwt.verify(token, getKey, {
       algorithms: ['RS256'],
-      audience: 'your-audience',
-      issuer: 'https://your-identity-provider.com/',
+      audience: 'https://dev-3tzvmvrlbquk2zkk.us.auth0.com/api/v2/',
+      issuer: 'http://localhost:3000',
     }, (err, decoded) => {
       if (err) {
         reject(err)
