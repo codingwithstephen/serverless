@@ -4,20 +4,24 @@ import * as AWSXRay from 'aws-xray-sdk'
 const XAWS = AWSXRay.captureAWS(AWS)
 
 // TODO: Implement the fileStogare logic
+const s3Bucketname = process.env.ATTACHMENT_S3_BUCKET
 
-async function uploadFileToS3() {
-  const s3 = new AWS.S3();
+export class AttachmentUtils {
+  constructor(
+    private readonly s3 = new XAWS.S3({ signatureVersion: 'v4' }),
+    private readonly bucketName = s3Bucketname
+  ) {}
 
-  const params = {
-    Bucket: 'my-bucket',
-    Key: 'my-file.txt',
-    Body: 'Hello World!'
-  };
+  getAttachmentUrl(todoId: string) {
+    return `https://${this.bucketName}.s3.amazonaws.com/${todoId}`
+  }
 
-  try {
-    const data = await s3.upload(params).promise();
-    console.log('File uploaded successfully:', data.Location);
-  } catch (err) {
-    console.log('Error uploading file:', err);
+  getUploadUrl(todoId: string) {
+    const uploadUrl = this.s3.getSignedUrl('putObject', {
+      Bucket: this.bucketName,
+      Key: todoId,
+      Expires: 200
+    })
+    return uploadUrl as string
   }
 }
