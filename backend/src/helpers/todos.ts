@@ -26,6 +26,11 @@ export async function createTodoItem(
   })
 }
 
+export async function getTodoItem(todoId: string): Promise<TodoItem>{
+  return await todoAccess.getTodoITem(todoId);
+
+}
+
 export async function generateUploadUrl(userId: string, todoId: string): Promise<string> {
   const uploadUrl = await todoAccess.getSignedUrl(todoId)
   await todoAccess.updateAttachmentUrl(userId, todoId)
@@ -43,6 +48,15 @@ export async function updateTodoItem(
 }
 
 export async function deleteTodoItem(userId: string, todoId: string) {
+  const item = await getTodoItem(todoId);
+
+  if (!item){
+    throw new Error("No todo item exists with this id")
+  }
+
+  if (item.userId !== userId) {
+    throw new Error('User ' + userId + ' is not authorized to delete item');
+  }
 
   await Promise.all([
     todoAccess.deleteTodoItem(userId, todoId),
