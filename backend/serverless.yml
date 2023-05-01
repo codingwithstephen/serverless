@@ -1,5 +1,7 @@
+org: smooney
+app: udacity
 service:
-  name: serverless-todo-app
+  name: serverless-udacity-todo
 
 plugins:
   - serverless-webpack

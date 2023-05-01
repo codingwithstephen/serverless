@@ -81,7 +81,7 @@ async function verifyToken(authHeader: string): Promise<JwtPayload> {
   const getKey = async (header: any, callback: any) => {
     try {
       const key = await client.getSigningKey(header.kid)
-      const signingKey = key.publicKey || key.rsaPublicKey
+      const signingKey = key.getPublicKey()
       callback(null, signingKey)
     } catch (err) {
       callback(err)
