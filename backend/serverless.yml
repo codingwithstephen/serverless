@@ -22,7 +22,7 @@ provider:
 
   environment:
     TODOS_TABLE: Todos-${self:provider.stage}
-    IMAGES_S3_BUCKET: serverless-todo-images-azs123fas12h-${self:provider.stage}
+    IMAGES_S3_BUCKET: serverless-udacity-images-azs123fas12h-${self:provider.stage}
     SIGNED_URL_EXPIRATION: 300
 
   iamRoleStatements:
