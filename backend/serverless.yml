@@ -207,8 +207,12 @@ resources:
                 - HEAD
                 - DELETE
               MaxAge: 3000
+        PublicAccessBlockConfiguration:
+          BlockPublicAcls: false
+          IgnorePublicAcls: false
+          BlockPublicPolicy: false
+          RestrictPublicBuckets: false
 
-    # S3 Attachments Bucket Policy
     BucketPolicy:
       Type: AWS::S3::BucketPolicy
       Properties:
@@ -216,13 +220,13 @@ resources:
         PolicyDocument:
           Id: S3AttachmentBucketPolicy
           Statement:
-              - Effect: Allow
-                Action: 
-                  - s3:GetObject
-                  - s3:PutObject
-                Resource: !Join
-                    - ''
-                    - - 'arn:aws:s3:::'
-                      - ${self:provider.environment.IMAGES_S3_BUCKET}
-                      - /*
-                Principal: "*"
+            - Effect: Allow
+              Action:
+                - s3:GetObject
+                - s3:PutObject
+              Resource: !Join
+                - ''
+                - - 'arn:aws:s3:::'
+                  - ${self:provider.environment.IMAGES_S3_BUCKET}
+                  - /*
+              Principal: "*"
