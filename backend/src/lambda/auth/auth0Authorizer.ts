@@ -62,51 +62,24 @@ export const handler = async (
 
 async function verifyToken(authHeader: string): Promise<JwtPayload> {
   const token = getToken(authHeader)
+  const jwt: Jwt = decode(token, { complete: true }) as Jwt
+  const kid = jwt.header.kid
+  let cert
 
-  // @ts-ignore
-  const jwtHeader: Jwt = decode(token, { complete: true }) as Jwt
+  try {
+    const jwks = await Axios.get(jwksUrl)
+    const signingKey = jwks.data.keys.find(k => k.kid === kid)
 
-  const kid = jwtHeader.header?.kid;
-
-  if (!kid) {
-    throw new Error('Invalid token header')
-  }
-
-  // @ts-ignore
-  const client = jwksClient({
-    jwksUri: jwksUrl,
-  })
-
-  // @ts-ignore
-  const getKey = async (header: any, callback: any) => {
-    try {
-      const key = await client.getSigningKey(header.kid)
-      const signingKey = key.getPublicKey()
-      callback(null, signingKey)
-    } catch (err) {
-      callback(err)
+    if (!signingKey) {
+      throw new Error(`No signing key matching the kid '${kid}' was found`);
     }
+
+    cert = `-----BEGIN CERTIFICATE-----\n${signingKey.x5c[0]}\n-----END CERTIFICATE-----`
+  } catch (e) {
+    logger.error('Failed to retrieve auth0 certificate', { error: e.message })
   }
-
-  // TODO: Implement token verification
-  // You should implement it similarly to how it was implemented for the exercise for the lesson 5
-  // You can read more about how to do this here: https://auth0.com/blog/navigating-rs256-and-jwks/
-
-  return new Promise<JwtPayload>((resolve, reject) => {
-    jwt.verify(token, getKey, {
-      algorithms: ['RS256'],
-      audience: 'https://dev-3tzvmvrlbquk2zkk.us.auth0.com/api/v2/',
-      issuer: 'http://localhost:3000',
-    }, (err, decoded) => {
-      if (err) {
-        reject(err)
-      } else {
-        resolve(decoded as JwtPayload)
-      }
-    })
-  })
-
-  return undefined
+  
+  return verify(token, cert, { algorithms: ['RS256'] }) as JwtPayload
 }
 
 function getToken(authHeader: string): string {
