@@ -64,7 +64,12 @@ functions:
       - http:
           method: get
           path: todos
-          cors: true
+          cors:
+            origins:
+              - http://localhost:3000
+            headers:
+              - Content-Type
+            allowCredentials: true
           authorizer: Auth
     iamRoleStatements:
       - Effect: Allow
@@ -93,7 +98,12 @@ functions:
       - http:
           method: patch
           path: todos/{todoId}
-          cors: true
+          cors:
+            origins:
+              - http://localhost:3000
+            headers:
+              - Content-Type
+            allowCredentials: true
           authorizer: Auth
           request:
             schemas:
@@ -110,7 +120,12 @@ functions:
       - http:
           method: delete
           path: todos/{todoId}
-          cors: true
+          cors:
+            origins:
+              - http://localhost:3000
+            headers:
+              - Content-Type
+            allowCredentials: true
           authorizer: Auth
     iamRoleStatements:
       - Effect: Allow
@@ -124,7 +139,12 @@ functions:
       - http:
           method: post
           path: todos/{todoId}/attachment
-          cors: true
+          cors:
+            origins:
+              - http://localhost:3000
+            headers:
+              - Content-Type
+            allowCredentials: true
           authorizer: Auth
     iamRoleStatements:
       - Effect: Allow
@@ -193,6 +213,9 @@ resources:
       Type: AWS::S3::Bucket
       Properties:
         BucketName: ${self:provider.environment.IMAGES_S3_BUCKET}
+        OwnershipControls:
+          Rules:
+            - ObjectOwnership: BucketOwnerEnforced
         CorsConfiguration:
           CorsRules:
             - AllowedHeaders:
@@ -208,9 +231,10 @@ resources:
               MaxAge: 3000
         PublicAccessBlockConfiguration:
           BlockPublicAcls: false
-          IgnorePublicAcls: false
           BlockPublicPolicy: false
+          IgnorePublicAcls: false
           RestrictPublicBuckets: false
+
 
     BucketPolicy:
       Type: AWS::S3::BucketPolicy
