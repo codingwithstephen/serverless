@@ -40,7 +40,11 @@ provider:
           Resource: "*"
 
 custom:
-  documentation:
+  allowUnrecognizedFunctionProperties: true
+  awsDocumentation:
+    outputFileName:
+      type: string
+      value: my-api-documentation
     api:
       info:
         version: '1.0.0'

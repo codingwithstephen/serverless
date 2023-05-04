@@ -17,6 +17,7 @@
     "winston": "^3.8.2"
   },
   "devDependencies": {
+    "@kakkuk/serverless-aws-apigateway-documentation": "^1.1.13",
     "@types/aws-lambda": "^8.10.115",
     "@types/jsonwebtoken": "^8.5.9",
     "@types/node": "^10.17.60",
