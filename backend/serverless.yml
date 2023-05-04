@@ -83,7 +83,12 @@ functions:
       - http:
           method: post
           path: todos
-          cors: true
+          cors:
+            origins:
+              - http://localhost:3000
+            headers:
+              - Content-Type
+            allowCredentials: true
           authorizer: Auth
           reqValidatorName: RequestBodyValidator
     iamRoleStatements:
