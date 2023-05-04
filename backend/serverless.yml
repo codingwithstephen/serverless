@@ -67,12 +67,7 @@ functions:
       - http:
           method: get
           path: todos
-          cors:
-            origins:
-              - http://localhost:3000
-            headers:
-              - Content-Type
-            allowCredentials: true
+          cors: true
           authorizer: Auth
           reqValidatorName: RequestBodyValidator
     iamRoleStatements:
@@ -87,14 +82,12 @@ functions:
       - http:
           method: post
           path: todos
-          cors:
-            origins:
-              - http://localhost:3000
-            headers:
-              - Content-Type
-            allowCredentials: true
+          cors: true
           authorizer: Auth
           reqValidatorName: RequestBodyValidator
+          request:
+            schemas:
+              application/json: ${file(models/create-todo-model.json)}
     iamRoleStatements:
       - Effect: Allow
         Action:
@@ -107,12 +100,7 @@ functions:
       - http:
           method: patch
           path: todos/{todoId}
-          cors:
-            origins:
-              - http://localhost:3000
-            headers:
-              - Content-Type
-            allowCredentials: true
+          cors: true
           authorizer: Auth
           reqValidatorName: RequestBodyValidator
           request:
@@ -130,12 +118,7 @@ functions:
       - http:
           method: delete
           path: todos/{todoId}
-          cors:
-            origins:
-              - http://localhost:3000
-            headers:
-              - Content-Type
-            allowCredentials: true
+          cors: true
           authorizer: Auth
           reqValidatorName: RequestBodyValidator
     iamRoleStatements:
@@ -150,12 +133,7 @@ functions:
       - http:
           method: post
           path: todos/{todoId}/attachment
-          cors:
-            origins:
-              - http://localhost:3000
-            headers:
-              - Content-Type
-            allowCredentials: true
+          cors: true
           authorizer: Auth
           reqValidatorName: RequestBodyValidator
     iamRoleStatements:
