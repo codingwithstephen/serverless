@@ -12,7 +12,6 @@ export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEven
   const requestBody: CreateTodoRequest = JSON.parse(event.body)
 
   const item = await createTodoItem(requestBody, userId)
-  delete item['userId']
 
   return {
     statusCode: 201,
