@@ -22,7 +22,7 @@ provider:
 
   environment:
     TODOS_TABLE: Todos-${self:provider.stage}
-    IMAGES_S3_BUCKET: serverless-todo-imgs-${self:provider.stage}
+    IMAGES_S3_BUCKET: serverless-udacity-test-todo-app-imgs-${self:provider.stage}
     SIGNED_URL_EXPIRATION: 300
 
   logs:
@@ -141,7 +141,10 @@ functions:
         Action:
           - s3:PutObject
           - s3:GetObject
-        Resource: !GetAtt AttachmentsBucket.Arn
+          - s3:ListBucket
+        Resource:
+          - "arn:aws:s3:::${self:provider.environment.IMAGES_S3_BUCKET}"
+          - "arn:aws:s3:::${self:provider.environment.IMAGES_S3_BUCKET}/*"
       - Effect: Allow
         Action:
           - dynamodb:UpdateItem

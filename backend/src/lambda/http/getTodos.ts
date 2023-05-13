@@ -1,25 +1,34 @@
 import 'source-map-support/register'
 
-import { APIGatewayProxyEvent, APIGatewayProxyResult, APIGatewayProxyHandler } from 'aws-lambda'
-import { getAllTodos } from '../../helpers/todos'
+import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda'
 import { getUserId } from '../utils'
+import middy from 'middy'
+import { cors } from 'middy/middlewares'
+import { getAllTodos } from '../../helpers/todos'
 
-export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
-  console.log('Processing event: ', event)
 
-  const userId = getUserId(event)
+export const handler = middy(
+  async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
+    console.log('Processing event: ', event)
 
-  const items = await getAllTodos(userId)
-  items.forEach(item => delete item['userId'])
+    const userId = getUserId(event)
 
-  return {
-    statusCode: 200,
-    headers: {
-      'Access-Control-Allow-Origin': '*',
-      'Access-Control-Allow-Credentials': true
-    },
-    body: JSON.stringify({
-      items
-    })
+    const items = await getAllTodos(userId)
+
+    return {
+      statusCode: 200,
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Credentials': true
+      },
+      body: JSON.stringify({
+        items
+      })
+    }
   }
-}
+)
+handler.use(
+  cors({
+    credentials: true
+  })
+)

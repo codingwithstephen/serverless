@@ -6,6 +6,9 @@ import { CreateTodoRequest } from '../requests/CreateTodoRequest'
 import { UpdateTodoRequest } from '../requests/UpdateTodoRequest'
 
 const todoAccess = new TodoAccess()
+import { createLogger } from '../utils/logger'
+const logger = createLogger('todos')
+
 
 export async function getAllTodos(userId: string): Promise<TodoItem[]> {
 
@@ -44,19 +47,14 @@ export async function updateTodoItem(
   todoId: string
 ): Promise<void> {
 
+  await generateUploadUrl(userId, todoId);
   await todoAccess.updateTodoItem(updateTodoRequest, userId, todoId)
 }
 
 export async function deleteTodoItem(userId: string, todoId: string) {
   const item = await getTodoItem(todoId, userId);
 
-  if (!item){
-    throw new Error("No todo item exists with this id")
-  }
-
-  if (item.userId !== userId) {
-    throw new Error('User ' + userId + ' is not authorized to delete item');
-  }
+  logger.info(item);
 
   await Promise.all([
     todoAccess.deleteTodoItem(userId, todoId),

@@ -40,6 +40,8 @@ export class TodoAccess {
 
     const item = result.Item
 
+
+
     return item as TodoItem
   }
   async createTodoItem(todoItem: TodoItem): Promise<TodoItem> {
@@ -57,7 +59,7 @@ export class TodoAccess {
     return this.s3.getSignedUrl('putObject', {
       Bucket: this.bucketName,
       Key: bucketKey,
-      Expires: Number(process.env.SIGNED_URL_EXPIRATION)
+      Expires: parseInt(process.env.SIGNED_URL_EXPIRATION)
     });
   }
 
