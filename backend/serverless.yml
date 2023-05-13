@@ -1,6 +1,6 @@
 org: smooney
-app: serverless-udacity-todo-app
-service: serverless-udacity-todo-app
+app: serverless-udacity-test-todo-app
+service: serverless-udacity-test-todo-app
 configValidationMode: error
 plugins:
   - serverless-webpack
@@ -8,6 +8,7 @@ plugins:
   - serverless-plugin-tracing
   - serverless-reqvalidator-plugin
   - serverless-aws-documentation
+  - serverless-dashboard
 provider:
   name: aws
   runtime: nodejs16.x
@@ -21,7 +22,6 @@ provider:
 
   environment:
     TODOS_TABLE: Todos-${self:provider.stage}
-    TODOS_CREATED_AT_INDEX: CreatedAtIndex
     IMAGES_S3_BUCKET: serverless-todo-imgs-${self:provider.stage}
     SIGNED_URL_EXPIRATION: 300
 
@@ -36,7 +36,7 @@ provider:
             - xray:PutTelemetryRecords
             - xray:PutTraceSegments
             - "cloudformation:*"
-            - "s3:*" 
+            - "s3:*"
           Resource: "*"
 
 custom:
@@ -57,7 +57,6 @@ custom:
         schema: ${file(models/update-todo-model.json)}
 
 functions:
-
   Auth:
     handler: src/lambda/auth/auth0Authorizer.handler
 
@@ -150,16 +149,14 @@ functions:
 
 resources:
   Resources:
-
-    RequestBodyValidator:  
+    RequestBodyValidator:
       Type: "AWS::ApiGateway::RequestValidator"
       Properties:
         Name: 'request-body-validator'
-        RestApiId: 
+        RestApiId:
           Ref: ApiGatewayRestApi
         ValidateRequestBody: true
         ValidateRequestParameters: false
-
 
     GatewayResponseDefault4XX:
       Type: AWS::ApiGateway::GatewayResponse
@@ -171,8 +168,7 @@ resources:
         ResponseType: DEFAULT_4XX
         RestApiId:
           Ref: ApiGatewayRestApi
-    
- 
+
     TodosTable:
       Type: AWS::DynamoDB::Table
       Properties:
@@ -182,22 +178,11 @@ resources:
             AttributeType: S
           - AttributeName: todoId
             AttributeType: S
-          - AttributeName: createdAt
-            AttributeType: S
         KeySchema:
           - AttributeName: userId
             KeyType: HASH
           - AttributeName: todoId
             KeyType: RANGE
-        LocalSecondaryIndexes:
-          - IndexName: ${self:provider.environment.TODOS_CREATED_AT_INDEX}
-            KeySchema:
-              - AttributeName: userId
-                KeyType: HASH
-              - AttributeName: createdAt
-                KeyType: RANGE
-            Projection:
-              ProjectionType: ALL
         BillingMode: PAY_PER_REQUEST
 
     AttachmentsBucket:
@@ -225,7 +210,6 @@ resources:
           BlockPublicPolicy: false
           IgnorePublicAcls: false
           RestrictPublicBuckets: false
-
 
     BucketPolicy:
       Type: AWS::S3::BucketPolicy
