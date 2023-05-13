@@ -13,8 +13,7 @@ export class TodoAccess {
     private readonly docClient: DocumentClient = new XAWS.DynamoDB.DocumentClient(),
     private readonly s3 = new AWS.S3({ signatureVersion: 'v4' }),
     private readonly todoTable = process.env.TODOS_TABLE,
-    private readonly bucketName = process.env.IMAGES_S3_BUCKET,
-    private readonly urlExpiration = process.env.SIGNED_URL_EXPIRATION) {
+    private readonly bucketName = process.env.IMAGES_S3_BUCKET) {
   }
 
   async getAllTodos(userId: string): Promise<TodoItem[]> {
@@ -30,10 +29,11 @@ export class TodoAccess {
     return items as TodoItem[]
   }
 
-  async getTodoITem(todoId: string): Promise<TodoItem>{
+  async getTodoITem(todoId: string, userId: string): Promise<TodoItem>{
     const result = await this.docClient.get({
       TableName: this.todoTable,
       Key: {
+        userId,
         todoId
       }
     }).promise();
@@ -57,9 +57,10 @@ export class TodoAccess {
     return this.s3.getSignedUrl('putObject', {
       Bucket: this.bucketName,
       Key: bucketKey,
-      Expires: this.urlExpiration
-    })
+      Expires: 300
+    });
   }
+
 
   async updateAttachmentUrl(userId: string, todoId: string): Promise<void> {
     await this.docClient.update({

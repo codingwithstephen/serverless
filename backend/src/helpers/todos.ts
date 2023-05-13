@@ -26,8 +26,8 @@ export async function createTodoItem(
   })
 }
 
-export async function getTodoItem(todoId: string): Promise<TodoItem>{
-  return await todoAccess.getTodoITem(todoId);
+export async function getTodoItem(todoId: string, userId: string): Promise<TodoItem>{
+  return await todoAccess.getTodoITem(todoId, userId);
 
 }
 
@@ -48,7 +48,7 @@ export async function updateTodoItem(
 }
 
 export async function deleteTodoItem(userId: string, todoId: string) {
-  const item = await getTodoItem(todoId);
+  const item = await getTodoItem(todoId, userId);
 
   if (!item){
     throw new Error("No todo item exists with this id")
