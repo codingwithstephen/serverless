@@ -57,7 +57,7 @@ export class TodoAccess {
     return this.s3.getSignedUrl('putObject', {
       Bucket: this.bucketName,
       Key: bucketKey,
-      Expires: 300
+      Expires: Number(process.env.SIGNED_URL_EXPIRATION)
     });
   }
 

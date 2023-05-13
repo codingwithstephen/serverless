@@ -8,8 +8,7 @@ const s3Bucketname = process.env.ATTACHMENT_S3_BUCKET;
 export class AttachmentUtils {
   constructor(
     private readonly s3 = new XAWS.S3({ signatureVersion: 'v4' }),
-    private readonly bucketName = s3Bucketname,
-    private readonly urlExpiration = process.env.SIGNED_URL_EXPIRATION
+    private readonly bucketName = s3Bucketname
   ) {}
 
   getAttachmentUrl(todoId: string) {
@@ -20,7 +19,7 @@ export class AttachmentUtils {
     const uploadUrl = this.s3.getSignedUrl('putObject', {
       Bucket: this.bucketName,
       Key: todoId,
-      Expires: this.urlExpiration
+      Expires: Number(process.env.SIGNED_URL_EXPIRATION)
     })
     return uploadUrl as string
   }

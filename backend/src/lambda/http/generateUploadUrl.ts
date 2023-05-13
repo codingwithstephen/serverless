@@ -8,7 +8,6 @@ const s3 = new AWS.S3({
   signatureVersion: 'v4' // Use Sigv4 algorithm
 });
 
-const urlExpiration = process.env.SIGNED_URL_EXPIRATION;
 const bucketName = process.env.IMAGES_S3_BUCKET;
 
 export const handler = middy(
@@ -23,7 +22,7 @@ function getSignedUrl(todoId: string) {
   return s3.getSignedUrl('putObject', {
     Bucket: bucketName,
     Key: todoId,
-    Expires: urlExpiration
+    Expires: Number(process.env.SIGNED_URL_EXPIRATION)
   })
 }
 handler

@@ -1,25 +1,37 @@
 import 'source-map-support/register'
 
-import { APIGatewayProxyEvent, APIGatewayProxyHandler, APIGatewayProxyResult } from 'aws-lambda'
-import { updateTodoItem } from '../../helpers/todos'
+import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda'
 import { UpdateTodoRequest } from '../../requests/UpdateTodoRequest'
 import { getUserId } from '../utils'
+import middy from 'middy'
+import { cors } from 'middy/middlewares'
+import { updateTodoItem } from '../../helpers/todos'
 
-export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
-  console.log('Processing event: ', event)
 
-  const userId = getUserId(event)
-  const todoId = event.pathParameters.todoId
-  const updatedTodoRequest: UpdateTodoRequest = JSON.parse(event.body)
+export const handler = middy(
+  async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
+    console.log('Processing event: ', event)
 
-  await updateTodoItem(updatedTodoRequest, userId, todoId)
+    const userId = getUserId(event)
+    const todoId = event.pathParameters.todoId
+    const updatedTodoRequest: UpdateTodoRequest = JSON.parse(event.body)
 
-  return {
-    statusCode: 204,
-    headers: {
-      'Access-Control-Allow-Origin': '*',
-      'Access-Control-Allow-Credentials': true
-    },
-    body: JSON.stringify({})
+    await updateTodoItem(updatedTodoRequest, userId, todoId)
+
+    return {
+      statusCode: 204,
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Credentials': true
+      },
+      body: JSON.stringify({})
+
+    }
   }
-}
+)
+handler.use(
+  cors({
+    credentials: true
+  })
+)
+
