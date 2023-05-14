@@ -55,6 +55,9 @@ export async function deleteTodo(
   })
 }
 
+
+
+
 export async function getUploadUrl(
   idToken: string,
   todoId: string
@@ -64,9 +67,13 @@ export async function getUploadUrl(
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${idToken}`
     }
-  })
-  return response.data.uploadUrl
+  });
+ 
+
+  return response.data;
 }
+
+
 
 export async function uploadFile(uploadUrl: string, file: Buffer): Promise<void> {
   await Axios.put(uploadUrl, file)

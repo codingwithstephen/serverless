@@ -58,7 +58,7 @@ export class EditTodo extends React.PureComponent<
       console.log(this.props.auth.getIdToken())
 
       this.setUploadState(UploadState.UploadingFile)
-      //await uploadFile(uploadUrl, this.state.file)
+      await uploadFile(uploadUrl, this.state.file)
 
       alert('File was uploaded!')
     } catch (e) {
