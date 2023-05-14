@@ -11,6 +11,9 @@
     },
     "done": {
       "type": "boolean"
+    },
+    "attachmentUrl": {
+      "type": "string"
     }
   },
   "required": [
@@ -18,5 +21,5 @@
     "dueDate",
     "done"
   ],
-  "additionalProperties": false
+  "additionalProperties": true
 }

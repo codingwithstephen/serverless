@@ -25,6 +25,7 @@ export async function createTodoItem(
     todoId: uuid.v4(),
     done: false,
     createdAt: new Date().toISOString(),
+    attachmentUrl: "",
     ...createGroupRequest
   })
 }
@@ -46,12 +47,13 @@ export async function generateUploadUrl(userId: string, todoId: string): Promise
 export async function updateTodoItem(
   updateTodoRequest: UpdateTodoRequest,
   userId: string,
-  todoId: string
-): Promise<string> {
+  todoId: string,
+  url: string
+): Promise<void> {
 
 
-  await todoAccess.updateTodoItem(updateTodoRequest, userId, todoId)
-  return await generateUploadUrl(userId, todoId);
+  await todoAccess.updateTodoItem(updateTodoRequest, userId, todoId, url);
+;
 
 }
 

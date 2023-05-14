@@ -42,6 +42,7 @@ export class EditTodo extends React.PureComponent<
   }
 
   handleSubmit = async (event: React.SyntheticEvent) => {
+    console.log(event)
     event.preventDefault()
 
     try {
@@ -60,7 +61,8 @@ export class EditTodo extends React.PureComponent<
       this.setUploadState(UploadState.UploadingFile)
       await uploadFile(uploadUrl, this.state.file)
 
-      alert('File was uploaded!')
+      alert('File was uploaded!');
+      
     } catch (e) {
       alert('Could not upload a file: ' + (e as Error).message)
     } finally {
