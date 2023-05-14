@@ -5,9 +5,6 @@ import * as middy from 'middy';
 import { cors, httpErrorHandler } from 'middy/middlewares';
 import AWS from 'aws-sdk';
 import { createLogger } from '../../utils/logger';
-import { getUserId } from '../utils'
-import { UpdateTodoRequest } from '../../requests/UpdateTodoRequest'
-import { updateTodoItem } from '../../helpers/todos'
 
 const logger = createLogger('generateUploadUrl');
 
@@ -29,19 +26,6 @@ export const handler = middy(
       const signedUrl = await getSignedUrl(todoId);
 
       console.log("After getSignedUrl");
-
-      logger.info("Event Parameters");
-      logger.info(event.pathParameters);
-      const userId = getUserId(event)
-      const updatedTodoRequest: UpdateTodoRequest = JSON.parse(event.body)
-      logger.info("Updated todo request")
-      logger.info(updatedTodoRequest)
-      logger.info("URL")
-      logger.info(signedUrl);
-      await updateTodoItem(updatedTodoRequest, userId, todoId, signedUrl);
-
-      logger.error("URL")
-      logger.error(signedUrl)
 
       return {
         statusCode: 200,

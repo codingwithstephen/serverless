@@ -25,7 +25,6 @@ export async function createTodoItem(
     todoId: uuid.v4(),
     done: false,
     createdAt: new Date().toISOString(),
-    attachmentUrl: "",
     ...createGroupRequest
   })
 }
@@ -53,7 +52,6 @@ export async function updateTodoItem(
 
 
   await todoAccess.updateTodoItem(updateTodoRequest, userId, todoId, url);
-;
 
 }
 
