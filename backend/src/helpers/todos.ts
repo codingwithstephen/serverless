@@ -36,6 +36,8 @@ export async function getTodoItem(todoId: string, userId: string): Promise<TodoI
 
 export async function generateUploadUrl(userId: string, todoId: string): Promise<string> {
   const uploadUrl = await todoAccess.getSignedUrl(todoId)
+  logger.info("Upload Url")
+  logger.info(uploadUrl);
   await todoAccess.updateAttachmentUrl(userId, todoId)
 
   return uploadUrl
@@ -48,6 +50,7 @@ export async function updateTodoItem(
 ): Promise<void> {
 
   await generateUploadUrl(userId, todoId);
+
   await todoAccess.updateTodoItem(updateTodoRequest, userId, todoId)
 }
 

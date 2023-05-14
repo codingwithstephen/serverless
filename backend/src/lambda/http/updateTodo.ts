@@ -12,11 +12,14 @@ const logger = createLogger('deleteTodo')
 
 export const handler = middy(
   async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
-    console.log('Processing event: ', event)
+    logger.info('Processing event: ', event)
+    logger.info("Event Parameters");
     logger.info(event.pathParameters);
     const userId = getUserId(event)
     const todoId = event.pathParameters.todoId
     const updatedTodoRequest: UpdateTodoRequest = JSON.parse(event.body)
+    logger.info("Updated todo request")
+    logger.info(updatedTodoRequest)
 
     await updateTodoItem(updatedTodoRequest, userId, todoId)
 
