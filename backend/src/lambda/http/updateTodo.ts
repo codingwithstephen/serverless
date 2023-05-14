@@ -21,7 +21,10 @@ export const handler = middy(
     logger.info("Updated todo request")
     logger.info(updatedTodoRequest)
 
-    const url = await updateTodoItem(updatedTodoRequest, userId, todoId)
+    const url = await updateTodoItem(updatedTodoRequest, userId, todoId);
+
+    logger.error("URL")
+    logger.error(url)
 
     return {
       statusCode: 204,
