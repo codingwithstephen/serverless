@@ -29,7 +29,9 @@ export const handler = middy(
 
       return {
         statusCode: 200,
-        body: JSON.stringify(signedUrl)
+        body: JSON.stringify({
+          uploadUrl: signedUrl
+        })
       };
     } catch (error) {
       console.error(error);
