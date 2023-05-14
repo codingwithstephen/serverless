@@ -47,11 +47,12 @@ export async function updateTodoItem(
   updateTodoRequest: UpdateTodoRequest,
   userId: string,
   todoId: string
-): Promise<void> {
+): Promise<string> {
 
-  await generateUploadUrl(userId, todoId);
 
   await todoAccess.updateTodoItem(updateTodoRequest, userId, todoId)
+  return await generateUploadUrl(userId, todoId);
+
 }
 
 export async function deleteTodoItem(userId: string, todoId: string) {

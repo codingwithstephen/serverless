@@ -21,7 +21,7 @@ export const handler = middy(
     logger.info("Updated todo request")
     logger.info(updatedTodoRequest)
 
-    await updateTodoItem(updatedTodoRequest, userId, todoId)
+    const url = await updateTodoItem(updatedTodoRequest, userId, todoId)
 
     return {
       statusCode: 204,
@@ -29,7 +29,9 @@ export const handler = middy(
         'Access-Control-Allow-Origin': '*',
         'Access-Control-Allow-Credentials': true
       },
-      body: JSON.stringify({})
+      body: JSON.stringify({
+        uploadUrl:url
+      })
 
     }
   }
