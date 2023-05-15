@@ -34,24 +34,26 @@ export async function getTodoItem(todoId: string, userId: string): Promise<TodoI
 
 }
 
-export async function generateUploadUrl(userId: string, todoId: string): Promise<string> {
+export async function updateAttachment(userId: string, todoId: string): Promise<string> {
   const uploadUrl = await todoAccess.getSignedUrl(todoId)
   logger.info("Upload Url")
   logger.info(uploadUrl);
+  logger.info(userId);
+  logger.info(todoId);
+  logger.info("Before update attachment url");
   await todoAccess.updateAttachmentUrl(userId, todoId)
-
+  logger.info("After update attachment url");
   return uploadUrl
 }
 
 export async function updateTodoItem(
   updateTodoRequest: UpdateTodoRequest,
   userId: string,
-  todoId: string,
-  url: string
+  todoId: string
 ): Promise<void> {
 
 
-  await todoAccess.updateTodoItem(updateTodoRequest, userId, todoId, url);
+  await todoAccess.updateTodoItem(updateTodoRequest, userId, todoId);
 
 }
 

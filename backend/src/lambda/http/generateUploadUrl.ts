@@ -5,6 +5,8 @@ import * as middy from 'middy';
 import { cors, httpErrorHandler } from 'middy/middlewares';
 import AWS from 'aws-sdk';
 import { createLogger } from '../../utils/logger';
+import { updateAttachment } from '../../helpers/todos'
+import { getUserId } from '../utils'
 
 const logger = createLogger('generateUploadUrl');
 
@@ -26,6 +28,8 @@ export const handler = middy(
       const signedUrl = await getSignedUrl(todoId);
 
       console.log("After getSignedUrl");
+      const userId = getUserId(event)
+      await updateAttachment(userId, todoId);
 
       return {
         statusCode: 200,

@@ -79,23 +79,21 @@ export class TodoAccess {
     }).promise()
   }
 
-  async updateTodoItem(updateTodoRequest, userId, todoId, attachmentUrl) {
+  async updateTodoItem(updateTodoRequest, userId, todoId) {
 
-    logger.error("Attachment Url");
-    logger.error(attachmentUrl);
-
+    logger.info("Update todo request");
+    logger.info(updateTodoRequest);
     await this.docClient.update({
       TableName: this.todoTable,
       Key: {
         "userId": userId,
         "todoId": todoId
       },
-      UpdateExpression: "set #name=:name, dueDate=:dueDate, done=:done, attachmentUrl=:attachmentUrl",
+      UpdateExpression: "set #name=:name, dueDate=:dueDate, done=:done",
       ExpressionAttributeValues: {
         ":name": updateTodoRequest.name,
         ":dueDate": updateTodoRequest.dueDate,
-        ":done": updateTodoRequest.done,
-        ":attachmentUrl": updateTodoRequest.attachmentUrl
+        ":done": updateTodoRequest.done
       },
       ExpressionAttributeNames: {
         "#name": "name"
